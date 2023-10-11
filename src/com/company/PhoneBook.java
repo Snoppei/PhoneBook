@@ -1,20 +1,32 @@
 package com.company;
 
+import com.company.DBImitation.DataStorage;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class PhoneBook {
-    private List<Person> contacts = new ArrayList<>();
+    private List<Person> contacts;
+    private DataStorage dataImitation;
+
+    public PhoneBook(DataStorage dataImitation) {
+        this.dataImitation = dataImitation;
+        // Загружаем контакты при создании экземпляра PhoneBook
+        contacts = dataImitation.loadContacts();
+    }
 
     public void addContact(Person person) {
         contacts.add(person);
-        // Сортируем контакты после добавления
         Collections.sort(contacts);
+        // Сохраняем контакты после добавления
+        dataImitation.saveContacts(contacts);
     }
 
     public void removeContact(Person person) {
         contacts.remove(person);
+        // Сохраняем контакты после удаления
+        dataImitation.saveContacts(contacts);
     }
 
     public List<Person> searchByLastName(String lastName) {
@@ -41,8 +53,9 @@ public class PhoneBook {
         if (contacts.contains(oldPerson)) {
             contacts.remove(oldPerson);
             contacts.add(newPerson);
-            // Сортируем контакты после редактирования
             Collections.sort(contacts);
+            // Сохраняем контакты после редактирования
+            dataImitation.saveContacts(contacts);
         } else {
             System.out.println("Контакт не найден.");
         }

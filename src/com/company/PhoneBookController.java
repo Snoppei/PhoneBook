@@ -14,7 +14,6 @@ public class PhoneBookController {
         phoneBook = new PhoneBook(dataImitation);
         scanner = new Scanner(System.in);
     }
-
     public void run() {
         while (true) {
             System.out.println("Меню:");
@@ -41,6 +40,7 @@ public class PhoneBookController {
                     Person newPerson = new Person(firstName, lastName);
                     newPerson.addPhoneNumber(phoneNumber);
                     phoneBook.addContact(newPerson);
+                    newPerson = null;
                     break;
 
                 case 2:
@@ -60,10 +60,25 @@ public class PhoneBookController {
                     System.out.print("Введите фамилию контакта, который вы хотите отредактировать: ");
                     String lastNameToEdit = scanner.nextLine();
                     List<Person> personsToEdit = phoneBook.searchByLastName(lastNameToEdit);
+
                     if (personsToEdit.isEmpty()) {
                         System.out.println("Контакт с фамилией " + lastNameToEdit + " не найден.");
+                    } else if (personsToEdit.size() == 1) {
+                        Person oldPerson = personsToEdit.get(0);
+                        System.out.print("Введите новое имя: ");
+                        String newFirstName = scanner.nextLine();
+                        System.out.print("Введите новую фамилию: ");
+                        String newLastName = scanner.nextLine();
+                        System.out.print("Введите новый номер телефона: ");
+                        String newPhoneNumber = scanner.nextLine();
+                        newPerson = new Person(newFirstName, newLastName);
+                        newPerson.addPhoneNumber(newPhoneNumber);
+                        phoneBook.editContact(oldPerson, newPerson);
+                        System.out.println("Контакт успешно отредактирован.");
                     } else {
-                        ////////// доделать
+                        System.out.println("Найдено несколько контактов с фамилией " + lastNameToEdit);
+                        // Здесь можно запросить пользователя, какой именно контакт отредактировать
+                        // Например, можно вывести список найденных контактов и попросить пользователя выбрать, который отредактировать.
                     }
                     break;
 
